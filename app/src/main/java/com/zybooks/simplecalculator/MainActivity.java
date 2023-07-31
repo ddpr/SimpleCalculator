@@ -8,13 +8,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.EmptyStackException;
-import java.util.Stack;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private Stack<String> calcStack = new Stack<String>();
     public TextView calculateMainText;
+    public TextView calculateFunctionText;
     private Button zeroButton;
     private Button oneButton;
     private Button twoButton;
@@ -34,6 +31,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean hasDecimal;
     private boolean operating;
+    private boolean reset;
+    private double num1;
+    private double num2;
+
+    private double result;
+    private String currentOperator;
+
+
 
 
     @Override
@@ -77,8 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         calculateMainText = findViewById(R.id.calculateMainText);
         calculateMainText.setText("0");
-        //Stack for Holding Expressions and
-        Stack<String> calcStack = new Stack<String>();
+        calculateFunctionText= findViewById(R.id.calculateFunctionView);
     }
     @Override
     public void onClick(View v){
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        }else if(v.getId() == R.id.decimalButton) {
            evaluate('.');
        }else if(v.getId() == R.id.enterButton) {
-           Log.d("stackPush", "onClick: enter ");
+           evaluate('=');
        }
 
     }
@@ -122,18 +126,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void evaluate(char c)
     {
         String token = String.valueOf(c);
-        String currentField = calculateMainText.getText().toString();
-        if(token.equals(".") && !currentField.isEmpty()){
+        String currentMainField = calculateMainText.getText().toString();
+        String currentMiniFiled = calculateFunctionText.getText().toString();
+        if(token.equals(".") && !currentMainField.isEmpty()){
             if(!hasDecimal) {
-                calculateMainText.setText(currentField + token);
+                calculateMainText.setText(currentMainField + token);
             }
             hasDecimal = true;
             operating = false;
             return;
         }
         if(isNumeric(token)){
-            if((hasDecimal || !currentField.equals("0") )&& !operating){
-                calculateMainText.setText(currentField + token);
+            if(reset){
+                calculateMainText.setText(token);
+                currentMainField = calculateMainText.getText().toString();
+                reset = false;
+                hasDecimal = false;
+                return;
+            }
+            if((hasDecimal || !currentMainField.equals("0") )&& !operating){
+                calculateMainText.setText(currentMainField + token);
             }else{
                 calculateMainText.setText(token);
                 operating = false;
@@ -145,18 +157,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(isOperator(token)){
-            try {
-                if (isOperator(calcStack.peek())) {
-                    calcStack.pop();
-                }
-            }catch(EmptyStackException ese){}
+            if(reset){
+                 num1 = result;
+                 reset = false;
+            }else{
+                num1 = Double.parseDouble(currentMainField);
+            }
+            currentOperator = token;
 
-            calcStack.push(currentField);
-            calcStack.push(token);
             operating = true;
-            calcStack.forEach(System.out::println);
         }
-        Log.d("stackPush", "onClick: " + calcStack.peek() );
+
+        if(token.equals("=")){
+            num2 = Double.parseDouble(currentMainField);
+            Log.d("num1", String.valueOf(num1));
+            Log.d("current operator", currentOperator);
+            Log.d("num2", String.valueOf(num2));
+            switch(currentOperator){
+                case ("+"):
+                    result = num1 + num2;
+                    break;
+                case ("-"):
+                    result = num1 - num2;
+                    break;
+                case ("*"):
+                    result = num1 * num2;
+                    break;
+                case("/"):
+                    result = num1 / num2;
+                    break;
+            }
+            calculateFunctionText.setText(String.valueOf(num1)
+                    + currentOperator + String.valueOf(num2));
+            calculateMainText.setText(String.valueOf(result));
+
+            reset = true;
+            hasDecimal = true;
+        }
+        //Log.d("stackPush", "onClick: " + calcStack.peek() );
     }
 
 
@@ -177,4 +215,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return false;
     }
+    
 }

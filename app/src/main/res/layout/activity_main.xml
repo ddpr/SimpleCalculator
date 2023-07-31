@@ -9,11 +9,20 @@
     <!--Value TextView-->
 
     <TextView
+        android:id="@+id/calculateFunctionView"
+        android:layout_width="168.5dp"
+        android:layout_height="45dp"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/calculateMainText"
+        app:layout_constraintLeft_toLeftOf="@id/calculateMainText" />
+
+    <TextView
         android:id="@+id/calculateMainText"
         android:layout_width="337dp"
         android:layout_height="90dp"
         android:text=""
-        android:textSize="50dp"
+        android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@id/gridLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.216"
