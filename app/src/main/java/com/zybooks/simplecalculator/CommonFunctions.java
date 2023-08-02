@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class CommonFunctions extends Fragment {
@@ -21,6 +22,7 @@ public class CommonFunctions extends Fragment {
             "2 + 2",
             "5 / 5",
             "10 * 10",
+            "100 - 10",
     };
 
     @Override
@@ -29,17 +31,17 @@ public class CommonFunctions extends Fragment {
         View view = inflater.inflate(R.layout.fragment_common_functions, container, false);
 
         funcResult = view.findViewById(R.id.functionresult);
-        // Get the reference to the ListView
+
         ListView functionListView = view.findViewById(R.id.functionListView);
 
-        // Create an ArrayAdapter to populate the ListView with pre-set functions
+
         ArrayAdapter<String> functionAdapter = new ArrayAdapter<>(
                 requireContext(),
                 android.R.layout.simple_list_item_1,
                 PRESET_FUNCTIONS
         );
 
-        // Set the adapter for the ListView
+
         functionListView.setAdapter(functionAdapter);
 
         functionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -59,13 +61,9 @@ public class CommonFunctions extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            // Perform the computation for the selected function in the background
             String selectedFunction = params[0];
-
-            double r = Calculate(selectedFunction);
-
-            String result = "Result of " + selectedFunction + "=" + r;
-            return result;
+            double result = Calculate(selectedFunction);
+            return "Result of " + selectedFunction + " = " + result;
         }
 
         @Override
@@ -78,26 +76,67 @@ public class CommonFunctions extends Fragment {
         funcResult.setText(result);
     }
 
-    public double Calculate(String s){
-        StringTokenizer tokenizer = new StringTokenizer(s);
+    public double Calculate(String s) {
+        Stack<Double> values = new Stack<>();
+        Stack<Character> operators = new Stack<>();
+        int i = 0;
 
-        double result = 0;
-        while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            if (token.matches("\\d+")) { // Check if the token is a number using regular expression
-                int number = Integer.parseInt(token);
-                if(token.equals("+")){
-                    result += number;
-                } else if (token.equals("-")) {
-                    result -= number;
-                }else if (token.equals("*")) {
-                    result *= number;
-                }else if (token.equals("/")) {
-                    result /= number;
+        while (i < s.length()) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                StringBuilder numBuilder = new StringBuilder();
+                while (i < s.length() && (Character.isDigit(s.charAt(i)) || s.charAt(i) == '.')) {
+                    numBuilder.append(s.charAt(i));
+                    i++;
                 }
+                double number = Double.parseDouble(numBuilder.toString());
+                values.push(number);
+            } else if (c == '+' || c == '-' || c == '*' || c == '/') {
+                while (!operators.isEmpty() && hasPrecedence(c, operators.peek())) {
+                    evaluateTop(values, operators);
+                }
+                operators.push(c);
+                i++;
+            } else {
+                i++;
             }
         }
-        return result;
+
+        while (!operators.isEmpty()) {
+            evaluateTop(values, operators);
+        }
+
+        if (!values.isEmpty()) {
+            return values.pop();
+        }
+
+        return 0.0; // Return 0.0 if there was an error or the equation is empty.
+    }
+
+    private boolean hasPrecedence(char op1, char op2) {
+        return (op2 == '*' || op2 == '/') && (op1 == '+' || op1 == '-');
+    }
+
+    private void evaluateTop(Stack<Double> values, Stack<Character> operators) {
+        char operator = operators.pop();
+        double operand2 = values.pop();
+        double operand1 = values.pop();
+        double result = 0;
+        switch (operator) {
+            case '+':
+                result = operand1 + operand2;
+                break;
+            case '-':
+                result = operand1 - operand2;
+                break;
+            case '*':
+                result = operand1 * operand2;
+                break;
+            case '/':
+                result = operand1 / operand2;
+                break;
+        }
+        values.push(result);
     }
 }
 
