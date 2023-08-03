@@ -1,7 +1,6 @@
 package com.zybooks.simplecalculator;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -182,30 +181,32 @@ public class CalculatorFragment extends Fragment implements View.OnClickListener
         }
 
         if(token.equals("=")){
-            num2 = Double.parseDouble(currentMainField);
-            Log.d("num1", String.valueOf(num1));
-            Log.d("current operator", currentOperator);
-            Log.d("num2", String.valueOf(num2));
-            switch(currentOperator){
-                case ("+"):
-                    result = num1 + num2;
-                    break;
-                case ("-"):
-                    result = num1 - num2;
-                    break;
-                case ("*"):
-                    result = num1 * num2;
-                    break;
-                case("/"):
-                    result = num1 / num2;
-                    break;
-            }
-            calculateFunctionText.setText(String.valueOf(num1)
-                    + currentOperator + String.valueOf(num2));
-            calculateMainText.setText(String.valueOf(result));
+            if(currentOperator!=null) {
+                num2 = Double.parseDouble(currentMainField);
+                //Log.d("num1", String.valueOf(num1));
+                //Log.d("current operator", currentOperator);
+                //Log.d("num2", String.valueOf(num2));
+                switch (currentOperator) {
+                    case ("+"):
+                        result = num1 + num2;
+                        break;
+                    case ("-"):
+                        result = num1 - num2;
+                        break;
+                    case ("*"):
+                        result = num1 * num2;
+                        break;
+                    case ("/"):
+                        result = num1 / num2;
+                        break;
+                }
+                calculateFunctionText.setText(String.valueOf(num1)
+                        + currentOperator + String.valueOf(num2));
+                calculateMainText.setText(String.valueOf(result));
 
-            reset = true;
-            hasDecimal = true;
+                reset = true;
+                hasDecimal = true;
+            }
         }
         //Log.d("stackPush", "onClick: " + calcStack.peek() );
     }
