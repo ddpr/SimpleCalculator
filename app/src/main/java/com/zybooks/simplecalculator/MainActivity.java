@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
                     R.id.navigation_calculator, R.id.navigation_common, R.id.navigation_previous)
                     .build();
 
-            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfig);
+            //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfig);
             NavigationUI.setupWithNavController(navView, navController);
         }
     }
