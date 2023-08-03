@@ -5,11 +5,11 @@
     android:id="@+id/nav_graph"
     app:startDestination="@+id/navigation_calculator">
 
-    <activity
+    <fragment
         android:id="@+id/navigation_calculator"
-        android:name="com.zybooks.simplecalculator.MainActivity"
+        android:name="com.zybooks.simplecalculator.CalculatorFragment"
         android:label="@string/title_calc"
-        tools:layout="@layout/activity_main" />
+        tools:layout="@layout/fragment_calculator" />
 
     <fragment
         android:id="@+id/navigation_common"
