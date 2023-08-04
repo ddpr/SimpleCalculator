@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
 public class CalculatorFragment extends Fragment implements View.OnClickListener {
 
 
@@ -183,6 +187,11 @@ public class CalculatorFragment extends Fragment implements View.OnClickListener
         if(token.equals("=")){
             if(currentOperator!=null) {
                 num2 = Double.parseDouble(currentMainField);
+
+
+
+
+
                 //Log.d("num1", String.valueOf(num1));
                 //Log.d("current operator", currentOperator);
                 //Log.d("num2", String.valueOf(num2));
@@ -200,6 +209,16 @@ public class CalculatorFragment extends Fragment implements View.OnClickListener
                         result = num1 / num2;
                         break;
                 }
+
+                String equation = String.format("%s %s %s = %s", num1, currentOperator, num2, result);
+                EquationAdapter equationAdapter = new EquationAdapter(new ArrayList<>(), requireContext());
+                equationAdapter.saveEquation(equation);
+
+                DecimalFormat decimalFormat = new DecimalFormat("#.######"); // Adjust the number of decimal places as needed
+                String formattedResult = decimalFormat.format(result);
+                calculateMainText.setText(formattedResult);
+
+
                 calculateFunctionText.setText(String.valueOf(num1)
                         + currentOperator + String.valueOf(num2));
                 calculateMainText.setText(String.valueOf(result));
