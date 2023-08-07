@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//Reference for calculator
+//https://www.geeksforgeeks.org/how-to-build-a-simple-calculator-app-using-android-studio/
+
 public class PreviousEquations extends Fragment {
 
     private final List<String> previousEquations = new ArrayList<>();

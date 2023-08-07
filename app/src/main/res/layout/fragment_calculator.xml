@@ -8,6 +8,7 @@
 
     <!--Value TextView-->
 
+
     <TextView
         android:id="@+id/calculateFunctionView"
         android:layout_width="168.5dp"

@@ -12,6 +12,11 @@ import androidx.fragment.app.Fragment;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+
+
+
+//Reference for Calculator
+//https://www.geeksforgeeks.org/how-to-build-a-simple-calculator-app-using-android-studio/
 public class CalculatorFragment extends Fragment implements View.OnClickListener {
 
 
